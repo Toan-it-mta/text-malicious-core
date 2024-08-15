@@ -103,16 +103,16 @@ def remove_stopwords(data, stopwords):
 
 
 # Tiền xử lý dữ liệu
-def preprocess_data(X_train, y_train, max_len):
+def preprocess_data(X, y, max_sample_length):
     
     with open('./vietnamese_stopwords/vietnamese-stopwords-dash.txt', 'r', encoding="utf8") as f:
         stopwords = set([w.strip() for w in f.readlines()])
 
     # Loại bỏ stopwords
-    X_train = remove_stopwords(X_train, stopwords)
+    X = remove_stopwords(X, stopwords)
     
     embeddings = []
-    for sample in X_train:
+    for sample in X:
         sample_embedding = []
         words = sample.split()
         for word in words:
@@ -123,11 +123,11 @@ def preprocess_data(X_train, y_train, max_len):
 
         embeddings.append(sample_embedding)
     # Padding hoặc truncation để đảm bảo tất cả các chuỗi có cùng độ dài max_len
-    padded_embeddings = tf.keras.preprocessing.sequence.pad_sequences(embeddings, maxlen=max_len, padding='post', truncating='post', dtype='float32')
+    padded_embeddings = tf.keras.preprocessing.sequence.pad_sequences(embeddings, maxlen=max_sample_length, padding='post', truncating='post', dtype='float32')
 
     # Chuyển đổi thành tensor của Keras
-    X_train_tensor = tf.convert_to_tensor(padded_embeddings, dtype=tf.float32)
-    y_train = to_categorical(y_train, num_classes=2)
-    y_train_tensor = tf.convert_to_tensor(y_train, dtype=tf.int32)  # Chuyển đổi nhãn y_train thành tensor
+    X_tensor = tf.convert_to_tensor(padded_embeddings, dtype=tf.float32)
+    y = to_categorical(y, num_classes=2)
+    y_tensor = tf.convert_to_tensor(y, dtype=tf.int32)  # Chuyển đổi nhãn y_train thành tensor
 
-    return X_train_tensor, y_train_tensor
+    return X_tensor, y_tensor

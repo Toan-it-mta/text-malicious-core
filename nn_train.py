@@ -25,7 +25,7 @@ def get_data(X_data, y_data):
     return data, y_data
 
 
-async def nn_train(labId:str=None, data_dir:str=None, model_type:str=None, max_sample_length:int=100, learning_rate:float=2e-3, activation:str='relu', epochs:int=2, batch_size:int=2, val_size:float=0.2, layers_num:int=1, rnn_units:int=100, rnn_bidirectional:bool=False, num_filters:int=2, kernel_size=2, pooling_size:int=2, padding:bool=True):
+def nn_train(labId:str=None, data_dir:str=None, model_type:str=None, max_sample_length:int=100, learning_rate:float=2e-3, activation:str='relu', epochs:int=2, batch_size:int=2, val_size:float=0.2, layers_num:int=1, rnn_units:int=100, rnn_bidirectional:bool=False, num_filters:int=2, kernel_size=2, pooling_size:int=2, padding:bool=True):
     '''
     params:
     model_type: str - tên loại model sử dụng

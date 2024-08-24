@@ -12,7 +12,8 @@ import tensorflow as tf
 import numpy as np
 
 print("Download FastText Begin")
-model_path = hf_hub_download(repo_id="facebook/fasttext-vi-vectors", filename="model.bin", local_dir="models")
+# model_path = hf_hub_download(repo_id="facebook/fasttext-vi-vectors", filename="model.bin", local_dir="models")
+model_path = "models/model.bin"
 word2vec = fasttext.load_model(model_path)
 print("Download FastText End")
 

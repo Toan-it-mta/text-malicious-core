@@ -6,7 +6,7 @@ import warnings
 from sklearn import metrics
 from keras.models import model_from_json
 warnings.filterwarnings("ignore")
-
+import json
 
 def read_data(file):
     data = pd.read_csv(file, encoding='utf-8')
@@ -43,13 +43,15 @@ def nn_test(data_dir, model_type, labId, max_sample_length):
     return {
         "test_acc": test_acc,
         'texts': X_data.to_list(),
-        'predicts': list(test_predictions),
+        'predicts': test_predictions.tolist(),
         'labels': y_test.to_list()
     }
 
 
-if __name__ == "__main__":
-    model_type = {}
-    model_type['backbone'] = "cnn"
-    model_type['modelName'] = "_cnn"
-    print(nn_test(data_dir='datasets/test.csv', model_type=model_type, labId='6ca93b2-3142-428f-9ffb-bd52a8fae21d', max_sample_length=100))
+# if __name__ == "__main__":
+#     model_type = {}
+#     model_type['backbone'] = "cnn"
+#     model_type['modelName'] = "_cnn"
+#     result = nn_test(data_dir='datasets/test.csv', model_type=model_type, labId='6ca93b2-3142-428f-9ffb-bd52a8fae21d', max_sample_length=100)
+#     a = json.dumps(result, ensure_ascii=False)
+#     print(a)

@@ -211,7 +211,7 @@ async def tr_remove_dict(word, labId):
         "vocab": vocab
     }
 
-async def tr_feature(data_dir, feature_name, labId):
+async def tr_feature(data_dir, feature_name, labId): 
     traditionalFeature = TraditionalFeatures()
     feature_path = f'./modelDir/{labId}/log_train/tr_feature'
 
@@ -237,4 +237,7 @@ async def tr_feature(data_dir, feature_name, labId):
         "word_vector": word_vector,
         "img_path":img_path
     }
+
+# if __name__ == "__main__":
+#     tr_feature("datasets/train.csv",'tf-idf','abc')
 

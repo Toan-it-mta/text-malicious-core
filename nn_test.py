@@ -42,6 +42,9 @@ def nn_test(data_dir, model_type, labId, max_sample_length):
     test_acc = metrics.accuracy_score(test_predictions, y_test)
     return {
         "test_acc": test_acc,
+        'texts': X_data.to_list(),
+        'predicts': list(test_predictions),
+        'labels': y_test.to_list()
     }
 
 

@@ -29,13 +29,13 @@ def create_knn_model(**kargs):
     """
     classifier = KNeighborsClassifier(**kargs)
     return classifier
-    
-async def tr_train(
+
+def tr_train(
         path_file_train_csv:str='datasets/train.csv',
         model_name:str='k-nn', 
         feature_name:str='tf-idf', 
         val_size:float = 0.1, 
-        labId:str='',
+        labId:str='abc',
         **kargs):
     """## Huấn luyện các mô hình truyền thống với các đặc trưng cụ thể
 
@@ -53,12 +53,15 @@ async def tr_train(
         
         feature_path = f'./modelDir/{labId}/log_train/tr_feature'
         vocab_path = f'{feature_path}/vocab'
-        traditionalfeature.load_vocab_from_file(vocab_path)
+        # if os.path.exists(vocab_path):
+        #     traditionalfeature.load_vocab_from_file(vocab_path)
+        # else:
+        traditionalfeature.create_vocab_from_corpus(path_file_train_csv, path_vocab_file=vocab_path)
 
         vectorizers_path = f'{feature_path}/vectorizers' 
         vector_path = f'{feature_path}/vector' 
 
-        result,_,_ = traditionalfeature.get_features(
+        result, _, _ = traditionalfeature.get_features(
             path_file_csv=path_file_train_csv, 
             feature_name=feature_name, 
             path_vector_save=vector_path, 
@@ -82,7 +85,6 @@ async def tr_train(
         X, y = df_train["arr_sentence_vector"].to_list(), df_train['label'].to_list()
         
     X_train, X_val, y_train, y_val = train_test_split( X, y, test_size=val_size, random_state=42)
-    print(kargs)
     if model_name == 'k-nn':
         classifier = create_knn_model(**kargs)
     elif model_name == 'navie-bayes':
@@ -109,11 +111,11 @@ async def tr_train(
     }
     
 
-async def tr_test(
+def tr_test(
         path_file_test_csv:str='datasets/test.csv',
         model_name:str='k-nn', 
         feature_name:str='tf-idf',
-        labId:str='',
+        labId:str='abc',
     ):
     
     """## Test các mô hình truyền thống với các đặc trưng cụ thể
@@ -165,19 +167,23 @@ async def tr_test(
     with open(path_model_save, 'rb') as f:
         classifier = pickle.load(f)
     
+    texts = df_train['text'].to_list()
     val_predicts = classifier.predict(X).tolist()
     score = compute_metrics(val_predicts, y)
     
     return {
         'test_acc': score['accuracy'],
-        'test_f1': score['f1_score']
+        # 'test_f1': score['f1_score'],
+        'texts': texts,
+        'predicts': val_predicts,
+        'labels': y
     }
 
-async def tr_infer(
+def tr_infer(
         text:str='',
         model_name:str='k-nn', 
         feature_name:str='tf-idf',
-        labId:str=''):
+        labId:str='abc'):
     """## Infer mô hình với đoạn text cụ thể
 
     ### Args:
@@ -217,9 +223,8 @@ async def tr_infer(
         'label': id2label[id]
     } 
 
-# if __name__ == "__main__":
-    # print(train(model_name='navie-bayes', feature_name='vinai/phobert-base'))
-    # print(test(path_model='models/log-train/model_vinai_phobert-base_navie-bayes.pkl', 
-    #                  feature_name='vinai/phobert-base', path_file_test_csv='datasets/test.csv'))
-    # print(infer('models/log-train/model_vinai_phobert-base_navie-bayes.pkl', feature_name='vinai/phobert-base', 
+if __name__ == "__main__":
+    # print(tr_train(model_name='navie-bayes', feature_name='tf-idf'))
+    # print(tr_test(labId='abc',feature_name='tf-idf', model_name='navie-bayes'))
+    # print(tr_infer('models/log-train/model_vinai_phobert-base_navie-bayes.pkl', feature_name='vinai/phobert-base', 
     #                   path_vectorizer_save='datasets/vectorizers/tf-idf-vectorizer.pkl', text='"""đm thô nhưng thật vl"""'))
